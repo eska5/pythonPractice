@@ -5,11 +5,13 @@ from sklearn import datasets
 import matplotlib.pyplot as plt
 
 # prepare data
-X_numpy, Y_numpy = datasets.make_regression(n_samples=100, n_features=1, noise=20, random_state=1)
+X_numpy, Y_numpy = datasets.make_regression(
+    n_samples=100, n_features=1, noise=20, random_state=1
+)
 
 X = torch.from_numpy(X_numpy.astype(np.float32))
 Y = torch.from_numpy(Y_numpy.astype(np.float32))
-Y = Y.view(Y.shape[0],1)
+Y = Y.view(Y.shape[0], 1)
 
 n_samples, n_features = X.shape
 
@@ -21,14 +23,16 @@ model = nn.Linear(input_size, output_size)
 # loss & optimizer
 learning_rate = 0.01
 criterion = nn.MSELoss()
-optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate) # Stochastic gradient descent
+optimizer = torch.optim.SGD(
+    model.parameters(), lr=learning_rate
+)  # Stochastic gradient descent
 
 # training loop
 num_epochs = 100
 for epoch in range(num_epochs):
     # forward pass and loss
     Y_predicted = model(X)
-    loss = criterion(Y_predicted,Y)
+    loss = criterion(Y_predicted, Y)
 
     # backward pass
     loss.backward()
@@ -38,11 +42,11 @@ for epoch in range(num_epochs):
 
     optimizer.zero_grad()
 
-    if(epoch+1 % 10 == 0):
-        print(f'epoch: {epoch+1}, loss = {loss.item():.4f}')
+    if epoch + 1 % 10 == 0:
+        print(f"epoch: {epoch+1}, loss = {loss.item():.4f}")
 
 # Plot
 predicted = model(X).detach().numpy()
-plt.plot(X_numpy, Y_numpy, 'ro')
-plt.plot(X_numpy,predicted, 'b')
+plt.plot(X_numpy, Y_numpy, "ro")
+plt.plot(X_numpy, predicted, "b")
 plt.show()
